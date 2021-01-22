@@ -1,4 +1,4 @@
-FROM clojure:openjdk-11-buster
+FROM clojure:openjdk-11-tools-deps-buster
 
 WORKDIR /root/llvm
 RUN apt-get update && \
@@ -12,7 +12,8 @@ ENV CC=/usr/lib/llvm-11/bin/clang
 ENV CXX=/usr/lib/llvm-11/bin/clang++
 WORKDIR /root/skija
 ADD . .
-RUN mv script/ninja /usr/local/bin
+RUN wget https://github.com/ninja-build/ninja/releases/download/v1.10.2/ninja-linux.zip && \
+    unzip ninja-linux.zip && rm ninja-linux.zip && mv ninja /usr/local/bin && chmod +x /usr/local/bin/ninja
 RUN /bin/bash -ic ./shared/script/install.sh
 RUN /bin/bash -ic ./native/script/build.sh
 RUN /bin/bash -ic ./native/script/install.sh
